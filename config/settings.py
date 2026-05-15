@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-ro**+#0_xi_@*i(0!dirp%id7rm!rbk#c2u()gi)w*41z!1e@^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = ['10.85.5.40']
+ALLOWED_HOSTS = ['10.85.5.44']
 
 
 # Application definition
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'info',
+    'app_auth',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +60,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 TEMPLATES = [
