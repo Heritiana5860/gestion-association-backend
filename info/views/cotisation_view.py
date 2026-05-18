@@ -10,7 +10,7 @@ from django.db import transaction
 from django.db.models import Count, Q
 
 class CotisationViewSet(viewsets.ModelViewSet):
-    queryset = Cotisation.objects.all()
+    queryset = Cotisation.objects.filter(is_paid=True)
     serializer_class = CotisationSerializer
     filterset_fields = ['is_paid', 'year']
     
