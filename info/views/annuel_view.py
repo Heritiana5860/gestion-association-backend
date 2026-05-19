@@ -24,10 +24,6 @@ class AdhasionAnnuelViewSet(viewsets.ModelViewSet):
         
         if not year:
             errors["year"] = "L'année doit être précisée."
-        # if novice_amount is None: 
-        #     errors["novice_amount"] = "Le montant novice est obligatoire."
-        # if doyen_ancien_amount is None:
-        #     errors["doyen_ancien_amount"] = "Le montant doyen est obligatoire."
             
         if errors:
             raise ValidationError(errors)
