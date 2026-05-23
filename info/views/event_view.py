@@ -2,7 +2,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets
 from info.models import Event, Member
-from info.serializers import EventSerializer, MemberSerializer
+from info.serializers import EventSerializer
 from datetime import datetime
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
