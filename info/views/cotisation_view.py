@@ -8,11 +8,15 @@ from info.serializers import CotisationSerializer
 from info.models import Cotisation, Member, AdhesionAnnuel
 from django.db import transaction
 from django.db.models import Count, Q
+from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 class CotisationViewSet(viewsets.ModelViewSet):
     queryset = Cotisation.objects.filter(is_paid=True)
     serializer_class = CotisationSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['is_paid', 'year']
+    search_fields = ['member__full_name']
     
     @action(detail=False, methods=['post'])
     def add(self, request):

@@ -1,7 +1,5 @@
 from django.db import models
 from .member import Member
-from .annuel import AdhesionAnnuel
-
 
 class Cotisation(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="cotisations")
