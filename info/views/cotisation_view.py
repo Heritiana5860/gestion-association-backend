@@ -12,11 +12,11 @@ from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 class CotisationViewSet(viewsets.ModelViewSet):
-    queryset = Cotisation.objects.filter(is_paid=True)
+    queryset = Cotisation.objects.all()
     serializer_class = CotisationSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['is_paid', 'year']
-    search_fields = ['member__full_name']
+    search_fields = ['member__full_name', 'member__cde', 'member__number_phone']
     
     @action(detail=False, methods=['post'])
     def add(self, request):

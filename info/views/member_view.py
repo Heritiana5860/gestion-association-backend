@@ -7,7 +7,7 @@ from info.models import Member
 from info.serializers import MemberSerializer
 
 class MemberViewSet(viewsets.ModelViewSet):
-    queryset = Member.objects.all().order_by('full_name')
+    queryset = Member.objects.prefetch_related('cotisations').all().order_by('full_name')
     serializer_class = MemberSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['statut', 'level', 'is_inside']
