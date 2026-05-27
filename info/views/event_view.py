@@ -8,7 +8,7 @@ from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
 
 class EventViewSet(viewsets.ModelViewSet):
-    queryset = Event.objects.all()
+    queryset = Event.objects.all().order_by('-id')
     serializer_class = EventSerializer
     filterset_fields = ['event_name', 'event_date', 'year']
     
