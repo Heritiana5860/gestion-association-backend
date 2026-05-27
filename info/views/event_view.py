@@ -16,10 +16,10 @@ class EventViewSet(viewsets.ModelViewSet):
     def add_coming_member(self, request, pk=None):
         event = self.get_object()
         
-        member_id = request.data.get('member_id')
+        member_cde = request.data.get('member_cde')
         
         try:
-            member = Member.objects.get(id= member_id)
+            member = Member.objects.get(cde= member_cde)
             event_date = event.event_date
             event_start_time = event.event_start_time
             event_end_time = event.event_end_time
