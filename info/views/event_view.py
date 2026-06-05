@@ -4,6 +4,7 @@ from rest_framework import viewsets
 from info.models import Event, Member
 from info.serializers import EventSerializer
 from datetime import datetime
+from django.utils import timezone
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
 
@@ -14,6 +15,7 @@ class EventViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['post'])
     def add_coming_member(self, request, pk=None):
+        now = timezone.now()
         event = self.get_object()
         
         member_cde = request.data.get('member_cde')
@@ -24,8 +26,7 @@ class EventViewSet(viewsets.ModelViewSet):
             event_start_time = event.event_start_time
             event_end_time = event.event_end_time
             
-            current_date = datetime.now().date()
-            current_time = datetime.now().time()
+            current_date = now.date()
             
             if event_date != current_date:
                 if event_date < current_date:
@@ -34,9 +35,9 @@ class EventViewSet(viewsets.ModelViewSet):
                     return Response({"Closed": "Event is not yet open"})
                 
             if event_date == current_date:
-                if current_time < event_start_time.time():
+                if now < event_start_time:
                     return Response({"Closed": "It's not already time"})
-                elif current_time > event_end_time.time():
+                elif now > event_end_time:
                     return Response({"Closed": "It's done"})
             
             event.present_members.add(member)
