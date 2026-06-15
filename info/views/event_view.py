@@ -26,24 +26,28 @@ class EventViewSet(viewsets.ModelViewSet):
             event_start_time = event.event_start_time
             event_end_time = event.event_end_time
             
-            current_date = now.date()
+            local_now = timezone.localtime(now)
+            current_date = local_now.date()
             
             if event_date != current_date:
                 if event_date < current_date:
-                    return Response({"Closed": "Event is already closed"})
+                    return Response({"Closed": "L'événement est déjà clôturé"})
                 elif event_date > current_date:
-                    return Response({"Closed": "Event is not yet open"})
+                    return Response({"Closed": "L'événement n'est pas encore ouvert"})
                 
             if event_date == current_date:
                 if now < event_start_time:
-                    return Response({"Closed": "It's not already time"})
+                    return Response({"Closed": "Fermé: Il n'est pas encore l'heure"})
                 elif now > event_end_time:
-                    return Response({"Closed": "It's done"})
+                    return Response({"Fermé: C'est terminé"})
+            
+            if event.present_members.filter(pk=member.pk).exists():
+                return Response({"status": "Membre déjà présent"})
             
             event.present_members.add(member)
-            return Response({"status": "Member added"})
+            return Response({"status": "Membre ajouté"})
         except Member.DoesNotExist:
-            return Response({"error": "Member not found"})
+            return Response({"error": "Member introuvable"})
             
     @action(detail=False, methods=['get'])
     def statistics(self, request):

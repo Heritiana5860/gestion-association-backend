@@ -47,6 +47,6 @@ class AdhasionAnnuelViewSet(viewsets.ModelViewSet):
                 annuel.save()
 
         return Response({
-            "status": "added" if created else "updated",
+            "status": "Ajout avec succès" if created else "Modification avec succès",
             "data": self.get_serializer(annuel).data
             })
