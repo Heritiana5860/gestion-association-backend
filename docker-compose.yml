@@ -24,7 +24,7 @@ services:
       context: . # Où se trouve le Dockerfile
       dockerfile: Dockerfile
     container_name: backend
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000" # Exposé sur notre machine hôte pour le dev
     env_file:

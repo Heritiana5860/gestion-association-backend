@@ -1,6 +1,6 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
-from info.models import Member, Event, Cotisation, AdhesionAnnuel
+from info.models import Member, Event, Cotisation, AdhesionAnnuel, President, Honneur, Cadre
 
 @admin.register(Member)
 class MemberAdmin(ModelAdmin):
@@ -37,3 +37,15 @@ class EventAdmin(ModelAdmin):
 @admin.register(AdhesionAnnuel)
 class AdhesionAnnuelAdmin(ModelAdmin):
     list_display = ['year', 'created_at', 'is_updated']
+    
+@admin.register(President)
+class PresidentAdmin(ModelAdmin):
+    list_display = ['nom', 'contact', 'year']
+    
+@admin.register(Honneur)
+class HonneurAdmin(ModelAdmin):
+    list_display = ['nom', 'fonction', 'contact', 'year']
+    
+@admin.register(Cadre)
+class HonneurAdmin(ModelAdmin):
+    list_display = ['nom', 'fonction', 'contact', 'address']
