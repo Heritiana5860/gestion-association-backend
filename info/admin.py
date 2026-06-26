@@ -1,6 +1,6 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
-from info.models import Member, Event, Cotisation, AdhesionAnnuel, President, Honneur, Cadre
+from info.models import Member, Event, Cotisation, AdhesionAnnuel, President, Honneur, Cadre, College
 
 @admin.register(Member)
 class MemberAdmin(ModelAdmin):
@@ -49,3 +49,7 @@ class HonneurAdmin(ModelAdmin):
 @admin.register(Cadre)
 class HonneurAdmin(ModelAdmin):
     list_display = ['nom', 'fonction', 'contact', 'address']
+    
+@admin.register(College)
+class HonneurAdmin(ModelAdmin):
+    list_display = ['nom', 'contact', 'address', 'etablissement', 'niveau', 'nom_promotion']

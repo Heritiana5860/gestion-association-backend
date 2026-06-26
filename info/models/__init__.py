@@ -5,6 +5,7 @@ from .annuel import AdhesionAnnuel
 from .cadre import Cadre
 from .president import President
 from .honneur import Honneur
+from .college import College
 
 __all__ = [
     'Member', 
@@ -13,5 +14,6 @@ __all__ = [
     'AdhesionAnnuel', 
     'Cadre', 
     'President', 
-    'Honneur'
+    'Honneur',
+    'College'
     ]

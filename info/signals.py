@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from datetime import timezone
+from django.utils import timezone
 from info.models import Cotisation, Member
 
 @receiver(post_save, sender=Member)
