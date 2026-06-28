@@ -14,23 +14,40 @@ class MemberViewSet(viewsets.ModelViewSet):
     search_fields = ['full_name', 'number_phone', 'school', 'cde', 'address']
     
     def get_queryset(self):
-        # Base de la requête
+        # On extrait 'year' directement de la requête brute
+        year = self.request.GET.get('year') or self.request.query_params.get('year')
+        
         queryset = Member.objects.all().order_by('full_name')
-        year = self.request.query_params.get('year')
         
         if year:
-            queryset = queryset.filter(cotisations__year=year).distinct()
-            
+            # On applique STRICTEMENT le prefetch filtré
             queryset = queryset.prefetch_related(
                 Prefetch(
                     'cotisations',
-                    queryset=Cotisation.objects.filter(year=year)
+                    queryset=Cotisation.objects.filter(year=str(year)),
+                    to_attr='filtered_cotisations' # Optionnel mais recommandé pour isoler le résultat
                 )
             )
         else:
             queryset = queryset.prefetch_related('cotisations')
             
         return queryset
+    
+    def retrieve(self, request, *args, **kwargs):
+        year = request.query_params.get('year')
+        instance = self.get_object()
+
+        if year:
+            instance = Member.objects.prefetch_related(
+                Prefetch(
+                    'cotisations',
+                    queryset=Cotisation.objects.filter(year=str(year)),
+                    to_attr='filtered_cotisations'
+                )
+            ).get(pk=instance.pk)
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
     
     @action(detail=False, methods=['get'])
     def statistics(self, request):

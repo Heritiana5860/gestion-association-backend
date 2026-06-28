@@ -3,7 +3,7 @@ from .member import Member
 
 class Cotisation(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="cotisations")
-    year = models.IntegerField()
+    year = models.CharField(blank=True, null=True, max_length=20)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     is_paid = models.BooleanField(default=False)
     
