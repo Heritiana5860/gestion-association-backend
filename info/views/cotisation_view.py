@@ -12,21 +12,32 @@ from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 class CotisationViewSet(viewsets.ModelViewSet):
-    queryset = Cotisation.objects.all()
+    # queryset = Cotisation.objects.all()
     serializer_class = CotisationSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['is_paid', 'year']
     search_fields = ['member__full_name', 'member__cde', 'member__number_phone']
+    
+    def get_queryset(self):
+        queryset = Cotisation.objects.all()
+        year = self.request.query_params.get('year') 
+        if year:
+            queryset = queryset.filter(year=year)
+        return queryset
     
     @action(detail=False, methods=['post'])
     def add(self, request):
         
         member_id = request.data.get('member_id')
         amount = request.data.get('amount')
+        year = request.data.get('year')
+        
+        if not year:
+            raise ValidationError({"year": "L'année est obligatoire pour attribuer une cotisation."})
         
         member = get_object_or_404(Member, id=member_id)
         
-        tarifs = AdhesionAnnuel.objects.last()
+        tarifs = AdhesionAnnuel.objects.first()
         
         if not tarifs:
             raise ValidationError({"error": "Les tarifs annuels ne sont pas encore configurés."})
@@ -46,7 +57,7 @@ class CotisationViewSet(viewsets.ModelViewSet):
         with transaction.atomic():
             cotisation, created = Cotisation.objects.get_or_create(
                 member=member,
-                year = datetime.now().year,
+                year=year,
                 defaults={
                     'amount': amount,
                     'is_paid': (amount == target_amount)
@@ -65,13 +76,20 @@ class CotisationViewSet(viewsets.ModelViewSet):
            
     @action(detail=False, methods=['get'])
     def statistics(self, request):
+        year = request.query_params.get('year')
         
-        member = Member.objects
-        novices = member.filter(statut="NOVICE").count()
-        anciens = member.filter(statut="ANCIEN(NE)").count()
-        doyens = member.filter(statut="DOYEN(NE)").count()
+        cotisation_filter = Q()
+        member_filter = Q()
         
-        stats = Cotisation.objects.aggregate(
+        if year:
+            cotisation_filter &= Q(year=year)
+            member_filter &= Q(cotisations__year=year)
+        
+        novices = Member.objects.filter(member_filter & Q(statut="NOVICE")).distinct().count()
+        anciens = Member.objects.filter(member_filter & Q(statut="ANCIEN(NE)")).distinct().count()
+        doyens = Member.objects.filter(member_filter & Q(statut="DOYEN(NE)")).distinct().count()
+        
+        stats = Cotisation.objects.filter(cotisation_filter).aggregate(
             total=Count('id'),
             paid=Count('id', filter=Q(is_paid=True)),
             not_paid=Count('id', filter=Q(is_paid=False)),
@@ -81,7 +99,7 @@ class CotisationViewSet(viewsets.ModelViewSet):
             anciens_not_paid=Count('id', filter=Q(member__statut="ANCIEN(NE)", is_paid=False)),
             doyens_paid=Count('id', filter=Q(member__statut="DOYEN(NE)", is_paid=True)),
             doyens_not_paid=Count('id', filter=Q(member__statut="DOYEN(NE)", is_paid=False)),
-        ) 
+        )
         
         total = stats['total'] or 0
         stats['paid_percentage'] = (stats['paid'] * 100) / total if total > 0 else 0
@@ -93,7 +111,7 @@ class CotisationViewSet(viewsets.ModelViewSet):
         stats['doyens_paid_percentage'] = (stats['doyens_paid'] * 100) / doyens if doyens > 0 else 0
         stats['doyens_not_paid_percentage'] = (stats['doyens_not_paid'] * 100) / doyens if doyens > 0 else 0
         
-        return Response(stats)         
+        return Response(stats)        
     
     @action(detail=False, methods=['patch'])
     def reset(self, request):

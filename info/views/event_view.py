@@ -9,9 +9,16 @@ from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
 
 class EventViewSet(viewsets.ModelViewSet):
-    queryset = Event.objects.all().order_by('-id')
+    # queryset = Event.objects.all().order_by('-id')
     serializer_class = EventSerializer
     filterset_fields = ['event_name', 'event_date', 'year']
+    
+    def get_queryset(self):
+        queryset = Event.objects.all().order_by('-id')
+        year = self.request.query_params.get('year') 
+        if year:
+            queryset = queryset.filter(year=year)
+        return queryset
     
     @action(detail=True, methods=['post'])
     def add_coming_member(self, request, pk=None):

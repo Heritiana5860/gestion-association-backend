@@ -4,13 +4,13 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'member', MemberViewSet)
-router.register(r'event', EventViewSet)
-router.register(r'cotisation', CotisationViewSet)
+router.register(r'event', EventViewSet, basename='event')
+router.register(r'cotisation', CotisationViewSet, basename='cotisation')
 router.register(r'annuel', AdhasionAnnuelViewSet)
 router.register(r'cadre', CadreViewSet)
 router.register(r'president', PresidentViewSet)
 router.register(r'honneur', HonneurViewSet)
-router.register(r'college', CollegeViewSets)
+router.register(r'college', CollegeViewSets, basename='college')
 
 urlpatterns = [
     path('', include(router.urls)),
