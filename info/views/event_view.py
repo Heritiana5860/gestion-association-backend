@@ -7,6 +7,7 @@ from datetime import datetime
 from django.utils import timezone
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
+from rest_framework import status
 
 class EventViewSet(viewsets.ModelViewSet):
     # queryset = Event.objects.all().order_by('-id')
@@ -24,37 +25,35 @@ class EventViewSet(viewsets.ModelViewSet):
     def add_coming_member(self, request, pk=None):
         now = timezone.now()
         event = self.get_object()
-        
         member_cde = request.data.get('member_cde')
-        
+
         try:
-            member = Member.objects.get(cde= member_cde)
-            event_date = event.event_date
-            event_start_time = event.event_start_time
-            event_end_time = event.event_end_time
-            
-            local_now = timezone.localtime(now)
-            current_date = local_now.date()
-            
-            if event_date != current_date:
-                if event_date < current_date:
-                    return Response({"Closed": "L'événement est déjà clôturé"})
-                elif event_date > current_date:
-                    return Response({"Closed": "L'événement n'est pas encore ouvert"})
-                
-            if event_date == current_date:
-                if now < event_start_time:
-                    return Response({"Closed": "Fermé: Il n'est pas encore l'heure"})
-                elif now > event_end_time:
-                    return Response({"Fermé: C'est terminé"})
-            
-            if event.present_members.filter(pk=member.pk).exists():
-                return Response({"status": "Membre déjà présent"})
-            
-            event.present_members.add(member)
-            return Response({"status": "Membre ajouté"})
+            member = Member.objects.get(cde=member_cde)
         except Member.DoesNotExist:
-            return Response({"error": "Member introuvable"})
+            return Response(
+                {"error": "Membre introuvable"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        local_now = timezone.localtime(now)
+        current_date = local_now.date()
+
+        if event.event_date != current_date:
+            if event.event_date < current_date:
+                return Response({"error": "L'événement est déjà clôturé"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({"error": "L'événement n'est pas encore ouvert"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if now < event.event_start_time:
+            return Response({"error": "Il n'est pas encore l'heure"}, status=status.HTTP_400_BAD_REQUEST)
+        if now > event.event_end_time:
+            return Response({"error": "C'est terminé"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if event.present_members.filter(pk=member.pk).exists():
+            return Response({"status": "Membre déjà présent"}, status=status.HTTP_200_OK)
+
+        event.present_members.add(member)
+        return Response({"status": "Membre ajouté"}, status=status.HTTP_201_CREATED)
             
     @action(detail=False, methods=['get'])
     def statistics(self, request):

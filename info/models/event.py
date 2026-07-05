@@ -9,7 +9,7 @@ class Event(models.Model):
     event_end_time = models.DateTimeField()
     
     present_members = models.ManyToManyField(Member, related_name="events_attended", blank=True)
-    year = models.IntegerField()
+    year = models.CharField(blank=True, null=True, max_length=20)
     
     created_at = models.DateField(auto_now_add=True)
     
