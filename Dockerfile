@@ -34,9 +34,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copier le reste du projet
 COPY . /app/
 
+# Rendre le script entrypoint exécutable (très important sous Windows)
+RUN chmod +x /app/entrypoint.sh
+
 # Exposer le port par défaut de Koyeb (8000)
 EXPOSE 8000
 
-# Commande pour démarrer l'application avec Gunicorn (fortement recommandé en prod)
-# Remplace "mon_projet" par le nom de ton dossier contenant wsgi.py
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+# démarrer le conteneur
+ENTRYPOINT ["/app/entrypoint.sh"]
