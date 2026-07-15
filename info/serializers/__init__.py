@@ -6,6 +6,7 @@ from .cadre_serializer import CadreSerializer
 from .president_serializer import PresidentSerializer
 from .honneur_serializer import HonneurSerializer
 from .college_serializer import CollegeSerializers
+from .material_serializer import MaterialSerializer
 
 __all__ = [
     'MemberSerializer', 
@@ -15,5 +16,6 @@ __all__ = [
     'CadreSerializer', 
     'PresidentSerializer', 
     'HonneurSerializer', 
-    'CollegeSerializers'
+    'CollegeSerializers',
+    'MaterialSerializer'
     ]

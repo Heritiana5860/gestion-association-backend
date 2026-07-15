@@ -6,6 +6,7 @@ from .cadre_view import CadreViewSet
 from .president_view import PresidentViewSet
 from .honneur_view import HonneurViewSet
 from .college_view import CollegeViewSets
+from .material_view import MaterialViewSet
 
 __all__ = [
     'MemberViewSet', 
@@ -15,5 +16,6 @@ __all__ = [
     'CadreViewSet', 
     'PresidentViewSet',
     'HonneurViewSet',
-    'CollegeViewSets'
+    'CollegeViewSets',
+    'MaterialViewSet'
     ]
