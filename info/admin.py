@@ -56,4 +56,4 @@ class HonneurAdmin(ModelAdmin):
     
 @admin.register(Material)
 class MaterialAdmin(ModelAdmin):
-    list_display = ['nom', 'contact', 'nombre_materiel', 'created_at', 'is_update']
+    list_display = ['nom', 'nombre_materiel', 'created_at', 'is_update']
