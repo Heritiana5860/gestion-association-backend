@@ -4,6 +4,7 @@
 set -e
 
 echo "=== Application des migrations Django ==="
+python manage.py makemigrations --noinput
 python manage.py migrate --noinput
 
 echo "=== Création du Superuser ==="
