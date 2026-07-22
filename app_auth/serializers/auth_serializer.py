@@ -7,5 +7,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Ajouter des champs personnalisés
         data['username'] = self.user.username
         data['first_name'] = self.user.first_name
+        data['role'] = self.user.role
         
         return data
