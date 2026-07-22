@@ -19,7 +19,7 @@ class CotisationViewSet(viewsets.ModelViewSet):
     search_fields = ['member__full_name', 'member__cde', 'member__number_phone']
     
     def get_queryset(self):
-        queryset = Cotisation.objects.all()
+        queryset = Cotisation.objects.select_related('member').all()
         year = self.request.query_params.get('year') 
         if year:
             queryset = queryset.filter(year=year)
