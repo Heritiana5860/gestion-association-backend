@@ -3,8 +3,8 @@
 # Quitter immédiatement si une commande échoue
 set -e
 
-echo "=== Exécution du nettoyage ciblé de l'authentification ==="
-python clean_auth.py
+# echo "=== Exécution du nettoyage ciblé de l'authentification ==="
+# python clean_auth.py
 
 echo "=== Application des migrations Django ==="
 python manage.py makemigrations --noinput
