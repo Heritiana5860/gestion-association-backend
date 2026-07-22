@@ -26,7 +26,7 @@ with connection.cursor() as cursor:
     # 2. Re-crée les séquences si nécessaire et nettoie l'historique de migration
     cursor.execute("""
         DELETE FROM django_migrations 
-        WHERE app IN ('admin', 'auth', 'app_auth', 'authtoken', 'sessions', 'contenttypes');
+        WHERE app IN ('admin', 'auth', 'app_auth', 'contenttypes');
     """)
 
 print("=== NETTOYAGE TERMINÉ AVEC SUCCÈS ===")
