@@ -61,6 +61,7 @@ MIDDLEWARE = [
 ]
 
 AUTH_USER_MODEL = 'app_auth.CustomUser'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ROOT_URLCONF = 'config.urls'
 REST_FRAMEWORK = {
