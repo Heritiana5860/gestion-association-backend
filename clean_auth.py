@@ -22,6 +22,7 @@ with connection.cursor() as cursor:
     cursor.execute("DROP TABLE IF EXISTS app_auth_customuser_user_permissions CASCADE;")
     cursor.execute("DROP TABLE IF EXISTS app_auth_customuser CASCADE;")
     cursor.execute("DROP TABLE IF EXISTS django_content_type CASCADE;")
+    cursor.execute("DROP TABLE IF EXISTS django_session CASCADE;")
     
     # 2. Re-crée les séquences si nécessaire et nettoie l'historique de migration
     cursor.execute("""
