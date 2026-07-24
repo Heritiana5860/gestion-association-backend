@@ -7,7 +7,7 @@ class CollegeViewSets(viewsets.ModelViewSet):
     serializer_class = CollegeSerializers
     
     def get_queryset(self):
-        queryset = College.objects.all()
+        queryset = College.objects.all().order_by('-year')
         year = self.request.query_params.get('year') 
         if year:
             queryset = queryset.filter(year=year)
